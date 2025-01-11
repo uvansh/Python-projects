@@ -14,4 +14,4 @@ def analyze():
     return render_template('result.html',text=text,sentiment=sentiment)
 
 if __name__=='__main__':
-    app.run(port=8080,debug=True)
+    app.run('0.0.0.0',port=8080,debug=True)
