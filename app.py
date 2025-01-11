@@ -1,11 +1,34 @@
 from flask import Flask,render_template,request
 from textblob import TextBlob
 import os
+import openai
 import plotly.graph_objs as go
 from plotly.io import to_html
 
 app=Flask(__name__)
 sentiment_data = []
+
+
+openai.api_key = os.getenv("OPENAI_api_key")
+
+def generate_personalized_recommendation(sentiment, text):
+    prompt = f"""
+    The user just analyzed a piece of text. The sentiment of the text is {sentiment}. Based on this sentiment, 
+    generate a personalized, positive, motivational or helpful message for the user. 
+    The text from the user is: "{text}".
+    Respond in a friendly, conversational tone.
+    """
+    
+    # Call OpenAI API for response
+    response = openai.Completion.create(
+        engine="text-davinci-003",  # You can use other engines like "gpt-3.5-turbo"
+        prompt=prompt,
+        max_tokens=100,  # Limit the response length
+        temperature=0.7  # Controls the randomness of the response
+    )
+    
+    # Extract and return the recommendation
+    return response.choices[0].text.strip()
 
 @app.route('/')
 def home():
@@ -30,7 +53,8 @@ def analyze():
 def generate_chart(data):
     labels = ['Positive', 'Negative', 'Neutral']
     values = [data.get('Positive', 0), data.get('Negative', 0), data.get('Neutral', 0)]
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+    colors = ['#36a2eb', '#ff6384', '#ffcd56']
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values,marker=dict(colors=colors))])
     return to_html(fig, full_html=False)
 
 
