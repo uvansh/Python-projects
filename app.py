@@ -5,6 +5,7 @@ import plotly.graph_objs as go
 from plotly.io import to_html
 
 app=Flask(__name__)
+sentiment_data = []
 
 @app.route('/')
 def home():
