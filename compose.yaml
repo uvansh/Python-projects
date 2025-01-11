@@ -16,7 +16,6 @@ services:
     environment:
     - PORT=8080
     - DEBUG=False
-    - OPENAI_API_KEY=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
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
